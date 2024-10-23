@@ -13,11 +13,14 @@ const ProfileSelection = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Select your role</h2>
-      <button onClick={() => handleRoleSelection('quizmaster')}>Quizmaster</button>
-      <button onClick={() => handleRoleSelection('player')}>Player</button>
+    <div class="selection">
+        <h2>Select your role</h2>
+        <div class="colordiv">
+            <button onClick={() => handleRoleSelection('quizmaster')}>Quizmaster</button>
+            <button onClick={() => handleRoleSelection('player')}>Player</button>
+        </div>
     </div>
+
   );
 };
 

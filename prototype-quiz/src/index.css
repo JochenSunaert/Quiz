@@ -1,3 +1,49 @@
+/*RESET CSS*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -7,62 +53,78 @@
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+body, html {
   margin: 0;
+  height: 100%;
+}
+
+.selection {
+  position: relative; /* Make the selection container relatively positioned */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  height: 100vh; /* Set full height */
+}
+
+.selection h2 {
+  position: absolute;
+  top: 20px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  z-index: 1; 
+  color: white;
+  text-align: center; 
+  font-size: 80px;
+  text-shadow: 2px 3px 10px rgba(0, 0, 0, 1);
+}
+
+.colordiv {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  grid-row: 1;
+  grid-column: 1 / 3;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.colordiv button {
+  flex: 1; 
+  height: 100%; /* Full height of the button container */
+  border: none; 
+  font-size: 24px; 
+  cursor: pointer; 
+  transition: background-color 0.3s;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+.colordiv button:nth-child(1) {
+  background-color: #fd2e00; 
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.colordiv button:nth-child(2) {
+  background-color: #9d00ff; 
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.colordiv button:nth-child(1):hover {
+  background-color: #FF5733;
+}
+.colordiv button:nth-child(2):hover {
+  background-color: #A839ED;
+}
+
+.quizmaster{
+  background-color: #fd2e00;
+  position: absolute; 
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+input{
+  padding: 20px;
+  background-color: white;
+  border: solid 5px black;
+  margin-top: 1px;
+  margin-bottom: 1px;
+color: black;
 }
