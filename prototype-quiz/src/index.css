@@ -48,6 +48,16 @@ table {
 
 *{
   transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
+}
+
+.transition {
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
+}
+
+.no-transition {
+  transition-duration: 0s !important; /* No transition */
 }
 
 
@@ -97,7 +107,6 @@ body, html {
 .selection h2 {
   color: rgba(255, 255, 255, 0.4);
   font-size: 130px;
-  transform: rotate(90deg);
   position: absolute;
   left: 50%; /* Horizontally center */
   top: 50%; /* Vertically center */
@@ -152,7 +161,7 @@ body:hover .selection h2{
 }
 
 /* Button colors */
-.orange button:hover  {
+.orange >  button:hover  {
   background-color: #fd2e00;
   font-size: 75px;
 }
@@ -162,7 +171,7 @@ body:hover .selection h2{
   font-size: 75px;
 }
 
-.orange button{
+.orange > button{
   background-color: #242424;
 }
 
@@ -192,8 +201,70 @@ input{
   color: black;
 }
 
-
-
 .quizmaster{
   display: none;
+}
+
+.quizmasterintro .orange > button{
+  background-color: #fd2e00;
+}
+
+.quizmasterintro .purple button{
+  background-color: #353535;
+}
+.backgroundcolor{
+  background-color: #353535;
+}
+
+.joinRoom{
+  display: none;
+  opacity: 0;
+  transition-duration: 1.5s;
+  margin-left: -20%;
+  margin-right: 20%;
+}
+
+.createroomtext{
+  font-size: 50px;
+  text-align: center;
+  margin-top: 125px;
+}
+
+.createroomgrid{
+  display: grid;
+  width: 30%;
+  justify-self: center;
+}
+
+#room-input{
+  background-color: #fd2e00;
+  border: white solid 3px;
+  border-right: none;
+  border-top: none;
+  font-size: 20px;
+  color: white;
+  padding-top: 0;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  justify-self: center;
+  align-self: center;
+  margin-top: 50px;
+  width: calc(100% - 60px);
+}
+
+.submitroom {
+  border: none;
+  background-color: transparent;
+  font-size: 20px !important;
+  align-self: end;
+  justify-self: end;
+  width: 40% !important;
+  margin-top: 50px;
+  display: flex; /* Flex to align icon and text */
+  justify-content: flex-end; /* Aligns content to the right */
+  align-items: center; /* Center vertically */
+}
+
+.submitroom i {
+  margin-left: 20px; /* Space between text and icon */
 }
