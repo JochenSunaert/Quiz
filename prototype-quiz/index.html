@@ -4,10 +4,41 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>kaas</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Wait until the DOM is fully loaded
+      document.addEventListener("DOMContentLoaded", function() {
+        // Check if the element with the class 'intro' exists
+        const introElement = document.querySelector('.intro');
+        
+        if (introElement) {
+          var loading = 0;
+    
+          setInterval(function () {
+            loading++;
+    
+            introElement.style.opacity = '1';
+    
+            if (loading == 1) {
+              // Do something if needed
+            } else if (loading == 2) {
+              // Do something if needed
+            } else if (loading == 4) {
+              document.querySelector(".test").style.fontSize = '50px';
+            } else if (loading == 10) {
+              // Do something if needed
+            } else if (loading > 12) {
+              introElement.style.opacity = '0';
+            }
+          }, 250);
+        }
+      });
+    </script>
+    
+    
   </body>
 </html>

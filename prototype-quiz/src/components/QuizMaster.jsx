@@ -85,7 +85,25 @@ const QuizMaster = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }} class="quizmaster">
+    <div>
+
+      
+<div class="selection intro">
+    <h2 class="extrabold">Choose</h2>
+    <div class="colordiv">
+        <div class="button-container orange">
+            <button onClick={() => handleRoleSelection('quizmaster')} class="extrabold">Quizmaster</button>
+            <p class="thin top-right">Jochen</p>
+        </div>
+        <div class="button-container purple">
+            <button onClick={() => handleRoleSelection('player')} class="extrabold">Player</button>
+            <p class="thin top-left">Sunaert</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="quizmaster">
       <h2>Quizmaster - Submit a Question</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -166,6 +184,7 @@ const QuizMaster = () => {
             <li key={playerName}>{playerName}: {scores[playerName]}</li>
           ))}
       </ul>
+    </div>
     </div>
   );
 };
