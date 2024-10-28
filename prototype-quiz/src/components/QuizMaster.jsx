@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import socket from "../socket"; // Adjust the path as necessary
+import { runIntroAnimation } from "../utils/introAnimation";
+import { runButtonClickAnimation } from "../utils/splitTextAnimation";
 
 const QuizMaster = () => {
 	const [question, setQuestion] = useState("");
@@ -27,96 +29,29 @@ const QuizMaster = () => {
 		});
 
 		socket.on("scoreUpdate", (updatedScores) => {
-			setScores(updatedScores); // Update the scores when received
+			setScores(updatedScores);
 		});
 
-		const introElement = document.querySelector(".intro");
-		if (introElement) {
-			var loading = 0;
-
-			const orangeButton = document.querySelector(".orange button");
-			const purpleElement = document.querySelector(".purple");
-			const selectionButton = document.querySelector(".selection button");
-      const joinRoom = document.querySelector(".joinRoom");
-			// Initial state: add transition classes
-			orangeButton.classList.add("transition");
-			purpleElement.classList.add("transition");
-
-			const interval = setInterval(() => {
-				loading++;
-
-				introElement.style.opacity = "1";
-				orangeButton.style.cursor = "auto";
-
-				if (loading === 1) {
-					document.querySelector(".orange p").style.display = "block";
-					document.querySelector(".chooseText").style.top = "30%";
-				} else if (loading === 3) {
-					document.querySelector(".chooseText").style.top = "150%";
-				} else if (loading === 4) {
-					document.querySelector(".chooseText").style.display = "none";
-					document.querySelector(".purple p").style.opacity = "0";
-					document.querySelector(".purple p").style.display = "block";
-				} else if (loading === 5) {
-					document.querySelector(".purple p").style.opacity = "1";
-					document.querySelector(".orange p").style.fontSize = "100px";
-					document.querySelector(".purple p").style.fontSize = "100px";
-					document.querySelector(".purple button").style.display = "none";
-					orangeButton.style.width = "200%";
-					orangeButton.style.fontSize = "130px";
-				} else if (loading === 6) {
-					document.querySelector(".backgroundcolor").style.backgroundColor =
-						"#fd2e00";
-				} else if (loading === 8) {
-					document.querySelector(".orange p").style.opacity = "0";
-					document.querySelector(".purple p").style.opacity = "0";
-          joinRoom.style.display ="grid"
-					// Delay the height adjustment to allow transitions to apply first
-					setTimeout(() => {
-						orangeButton.style.height = "25%"; // Set height after transition
-						selectionButton.style.height = "25%";
-						orangeButton.style.fontSize = "75px";
-					}, 0);
-				} else if (loading === 9) {
-
-          joinRoom.style.opacity= '1';
-          joinRoom.style.marginLeft= '0';
-          joinRoom.style.marginRight= '0';
-         } else if (loading === 10) {
-					/* Stop de transitie tijd voor even. */
-					orangeButton.classList.add("no-transition");
-					purpleElement.classList.add("no-transition");
-
-					orangeButton.style.width = "100%";
-					purpleElement.style.display = "none";
-				} else if (loading === 11) {
-					/* zet de transitie tijd terug. */
-					orangeButton.classList.remove("no-transition");
-					purpleElement.classList.remove("no-transition");
-					// Set the styles that should transition
-					//orangeButton.style.width = "100%";
-				} else if (loading === 12) {
-					// Set height directly here if needed
-					orangeButton.style.height = "25%";
-					selectionButton.style.height = "25%";
-				}
-
-				// Debugging Output
-				// console.log(`Loading: ${loading}`);
-				// console.log(`Button Styles: ${orangeButton.style.cssText}`);
-				//  clearInterval(interval);
-			}, 300);
-
-			// Cleanup interval on component unmount
-			return () => clearInterval(interval);
-		}
-
+		/* ################### INTRO ANIMATION ################### */
+		const cleanup = runIntroAnimation(socket);
 		return () => {
-			socket.off("playerAnswerReceived");
-			socket.off("available-players");
-			socket.off("scoreUpdate");
+			cleanup();
 		};
-	}, [room]);
+	}, []);
+
+	/* ################### SPLIT TEXT ANIMATION ################### */
+	/* ################### + ROOM CODE JOIN ################### */
+
+	const handleJoinRoom = (e) => {
+		e.preventDefault();
+		if (room) {
+			socket.emit("join-room", { room, playerName: "Quizmaster" });
+			setIsRoomJoined(true);
+			runButtonClickAnimation();
+		} else {
+			alert("Please enter a room name");
+		}
+	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -143,16 +78,6 @@ const QuizMaster = () => {
 		setCanSubmitQuestion(false); // Disable question submission until evaluated
 	};
 
-	const handleJoinRoom = (e) => {
-		e.preventDefault();
-		if (room) {
-			socket.emit("join-room", { room, playerName: "Quizmaster" });
-			setIsRoomJoined(true);
-		} else {
-			alert("Please enter a room name");
-		}
-	};
-
 	const handleSelectCorrectAnswer = (e) => {
 		setCorrectAnswer(e.target.value);
 	};
@@ -174,23 +99,58 @@ const QuizMaster = () => {
 			<div class="selection intro quizmasterintro">
 				<h2 class="extrabold chooseText">Choose</h2>
 				<div class="colordiv">
+					{/*Alles dat moet gebeuren na oranje knop te klikken*/}
 					<div class="button-container orange">
-						<button class="extrabold">Quizmaster</button>
-						<p class="thin top-right">Jochen</p>
-						<div class="joinRoom">
-							<h3 class="thin createroomtext">Create a room</h3>
-							<form onSubmit={handleJoinRoom} class="createroomgrid">
-								<input type="text" id="room-input" placeholder="Enter room name" value={room} onChange={(e) => setRoom(e.target.value)}/>
-								<button type="submit" class="submitroom">Join room <i class="fa-solid fa-chevron-right"></i></button>
-							</form>
+						{/*Animatie 1*/}
+							<button class="extrabold">Quizmaster</button>
+							<p class="thin top-right">Jochen</p>
+							<div class="joinRoom">
+								<h3 class="thin createroomtext">Create a room</h3>
+								<form onSubmit={handleJoinRoom} class="createroomgrid">
+									<input type="text" id="room-input" placeholder="Enter room name" value={room} onChange={(e) => setRoom(e.target.value)} />
+									<button type="submit" class="submitroom">
+										Join room <i class="fa-solid fa-chevron-right"></i>
+									</button>
+								</form>
+							</div>
+						{/*Animatie 2*/}
+							<div class="divCentreerder">
+    							<div class="image-container">
+        							<img src="../assets/QuizmasterTop.png" class="topSplit" alt="Image 1" />
+       								<div class="line line-bottom"></div> 
+        							<div class="fixed-height-content">
+										<div class="orange-content">
+											<p>My content will be here...</p>
+											<p>More content...</p>
+											<p>Even more content...</p>
+											<p>...</p>
+										</div>
+        							</div>
+        							<div class="line line-top"></div> 
+        							<img src="../assets/QuizmasterBottom.png" class="bottomSplit" alt="Image 2" />
+    							</div>
+							</div>
 						</div>
-					</div>
+					{/*Alles dat moet gebeuren na paarse knop te klikken*/}
 					<div class="button-container purple">
 						<button class="extrabold playerButton">Player</button>
 						<p class="thin top-left">Sunaert</p>
 					</div>
 				</div>
 			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -244,19 +204,6 @@ const QuizMaster = () => {
 				<button onClick={handleEvaluateAnswers} disabled={canSubmitQuestion}>
 					Evaluate Answers
 				</button>
-
-				<h3>Join a Room</h3>
-				<form onSubmit={handleJoinRoom}>
-					<input
-						type="text"
-						id="room-input"
-						placeholder="Enter room name"
-						value={room}
-						onChange={(e) => setRoom(e.target.value)}
-					/>
-					<button type="submit">Join room</button>
-				</form>
-
 				<h3>Connected Players:</h3>
 				<ul>
 					{connectedPlayers

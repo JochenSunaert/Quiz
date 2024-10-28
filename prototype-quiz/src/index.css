@@ -260,11 +260,75 @@ input{
   justify-self: end;
   width: 40% !important;
   margin-top: 50px;
-  display: flex; /* Flex to align icon and text */
-  justify-content: flex-end; /* Aligns content to the right */
-  align-items: center; /* Center vertically */
+  display: flex; 
+  justify-content: flex-end; 
+  align-items: center; 
 }
 
 .submitroom i {
-  margin-left: 20px; /* Space between text and icon */
+  margin-left: 20px; 
+}
+
+.divCentreerder {
+  display: grid;
+  place-items: center; 
+  height: 100vh; 
+}
+
+.image-container {
+  display: grid; 
+  position: relative; 
+}
+
+.topSplit {
+  z-index: 1; 
+}
+
+.bottomSplit {
+  z-index: 1; 
+}
+
+
+.line-bottom {
+  position: inherit;
+  top: calc(50%);
+  left: 50%;
+  height: 2px;
+  background-color: white;
+  width: 0;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 0px;
+  margin-top: -2px;
+}
+
+.line-top {
+  position: inherit;
+  top: calc(50%);
+  left: 50%;
+  height: 2px;
+  background-color: white; 
+  width: 0;
+  transform: translate(-50%, -50%); 
+  transition: width 0.5s ease;
+  z-index: 2;
+  width: 0px;
+  margin-bottom: -2px;
+}
+
+.fixed-height-content {
+  display: none;
+  height: 0px; 
+  overflow-y: auto; 
+  position: relative;
+  z-index: 1; 
+}
+
+.orange-content{
+  display: none;
+  padding: 2%;
+}
+
+.divCentreerder{
+  display: none;
 }
