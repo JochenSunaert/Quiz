@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import socket from "../socket"; // Adjust the path as necessary
 import { runIntroAnimation } from "../utils/introAnimation";
 import { runButtonClickAnimation } from "../utils/splitTextAnimation";
@@ -14,6 +15,9 @@ const QuizMaster = () => {
 	const [scores, setScores] = useState({}); // Track player scores
 	const [canSubmitQuestion, setCanSubmitQuestion] = useState(true); // Track if the quizmaster can submit a question
 	const [error, setError] = useState(""); // State for error messages
+	const [isQuestionSubmitted, setIsQuestionSubmitted] = useState(false);
+	const [showPlayerAnswers, setShowPlayerAnswers] = useState(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		socket.on("playerAnswerReceived", (quizAnswer) => {
@@ -55,29 +59,44 @@ const QuizMaster = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (!isRoomJoined || !correctAnswer) {
-			alert(
-				"You must join a room and select a correct answer before submitting!"
-			);
+		setError(""); // Reset any existing error messages
+	
+		if (!isRoomJoined) {
+			alert("You must join a room before submitting!");
 			return;
 		}
-
+	
+		// Check for empty option fields
+		if (options.some(option => option.trim() === "")) {
+			setEmptyOptionError("All option fields must be filled in!");
+			return;
+		}
+	
 		// Check for duplicate options
 		const uniqueOptions = new Set(options);
 		if (uniqueOptions.size !== options.length) {
-			setError("Options must be unique!"); // Set error message if duplicates are found
+			setError("Options must be unique!");
 			return;
-		} else {
-			setError(""); // Clear error if no duplicates
 		}
-
+	
+		// Check if a correct answer is selected
+		if (!correctAnswer) {
+			setSelectCorrectAnswerError("You must select a correct answer!");
+			return;
+		}
+	
 		const questionData = { question, options };
 		socket.emit("newQuestion", { questionData, room });
 		setQuestion("");
 		setOptions(["", "", "", ""]);
-		setCanSubmitQuestion(false); // Disable question submission until evaluated
+		setCanSubmitQuestion(false);
+		setIsQuestionSubmitted(true); // Set this to true on successful submission
+	
+		// Show player answers section
+		setShowPlayerAnswers(true);
 	};
-
+	
+	
 	const handleSelectCorrectAnswer = (e) => {
 		setCorrectAnswer(e.target.value);
 	};
@@ -93,7 +112,19 @@ const QuizMaster = () => {
 		socket.emit("correctAnswerSelected", { room, correctAnswer });
 		setPlayerAnswers([]); // Clear player answers after evaluation
 		setCanSubmitQuestion(true); // Allow the quizmaster to submit a new question
+		
+		// Reset states to show main question form
+		setShowPlayerAnswers(false);
+		setIsQuestionSubmitted(false); // Ensure the main question form can show again
 	};
+
+	const handleChooseRoleClick = () => {
+		setShowProfileSelection(true); // Show the profile selection again
+		// Reset any other necessary state if needed
+	};
+	
+	
+	
 	return (
 		<div class="backgroundcolor">
 			<div class="selection intro quizmasterintro">
@@ -120,10 +151,81 @@ const QuizMaster = () => {
        								<div class="line line-bottom"></div> 
         							<div class="fixed-height-content">
 										<div class="orange-content">
-											<p>My content will be here...</p>
-											<p>More content...</p>
-											<p>Even more content...</p>
-											<p>...</p>
+											{/*MAIN CONTENT NA SPLIT*/}
+											<div class="topnav">
+											<p onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>Choose role</p>
+												<p>end game</p>
+											</div>
+											{!isQuestionSubmitted && !showPlayerAnswers && (
+											<main>
+												<h1 class="extrabold">Your Question</h1>
+												<form class="sendQuestions" onSubmit={handleSubmit}>
+													<div class="vraag">
+														<input type="text" placeholder="your question" value={question} onChange={(e) => setQuestion(e.target.value)} required/>
+													</div>
+													<div>
+														<h1 class="extrabold">Player options</h1>
+														<div class="playeroptions">
+    {options.map((option, index) => (
+        <div class="options" key={index}>
+            <input 
+                type="text" 
+                value={option} 
+                placeholder="Place an option here" 
+                onChange={(e) => handleOptionChange(index, e.target.value)} 
+                required 
+            />
+            <div class="radio-container">
+                <input 
+                    type="radio" 
+                    id={`radio-${index}`} 
+                    name="correctAnswer" 
+                    value={option} 
+                    onChange={handleSelectCorrectAnswer} 
+                />
+                <label htmlFor={`radio-${index}`} class="checkmark"></label>
+            </div>
+        </div>
+    ))}
+</div>
+
+
+
+
+
+													</div>
+													{error && <p style={{ color: "red" }}>{error}</p>}{" "}
+													{/* Display error message */}
+													<button type="submit" class="submitroom extrabold" disabled={!correctAnswer || !canSubmitQuestion}> Submit Question <i class="fa-solid fa-chevron-right"></i></button>
+													
+												</form>
+											</main>
+											)}
+											
+{showPlayerAnswers && (
+    <div class="playerAnswers">
+        <h1 class="extrabold">Player Answers</h1>
+        <ul class="gridplayerfilled">
+            {playerAnswers.length > 0 ? (
+                playerAnswers.map(({ playerName, answer }, index) => (
+                    <li class="playerfilled" key={index}>
+						<div>
+							<h3 class="extrabold">{playerName}:</h3>
+							{answer}{" "}
+							{answer === correctAnswer ? "(Correct)" : "(Wrong)"}
+						</div>
+
+                    </li>
+                ))
+            ) : (
+                <p>No answers yet...</p>
+            )}
+        </ul>
+        <button onClick={handleEvaluateAnswers} class="submitroom extrabold evaluating" disabled={canSubmitQuestion}>
+			evaluate answers <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+)}
 										</div>
         							</div>
         							<div class="line line-top"></div> 
@@ -163,47 +265,9 @@ const QuizMaster = () => {
 
 			<div class="quizmaster">
 				<h2>Quizmaster - Submit a Question</h2>
-				<form onSubmit={handleSubmit}>
-					<div>
-						<label>Question:</label>
-						<input
-							type="text"
-							value={question}
-							onChange={(e) => setQuestion(e.target.value)}
-							required
-						/>
-					</div>
-					<div>
-						{options.map((option, index) => (
-							<div key={index}>
-								<label>Option {index + 1}:</label>
-								<input
-									type="text"
-									value={option}
-									placeholder="Plaats een optie hier"
-									onChange={(e) => handleOptionChange(index, e.target.value)}
-									required
-								/>
-								<input
-									type="radio"
-									name="correctAnswer"
-									value={option}
-									onChange={handleSelectCorrectAnswer}
-								/>
-								<label>Mark as Correct</label>
-							</div>
-						))}
-					</div>
-					{error && <p style={{ color: "red" }}>{error}</p>}{" "}
-					{/* Display error message */}
-					<button type="submit" disabled={!correctAnswer || !canSubmitQuestion}>
-						Submit Question
-					</button>
-				</form>
+				
 
-				<button onClick={handleEvaluateAnswers} disabled={canSubmitQuestion}>
-					Evaluate Answers
-				</button>
+				
 				<h3>Connected Players:</h3>
 				<ul>
 					{connectedPlayers
@@ -211,20 +275,6 @@ const QuizMaster = () => {
 						.map((player, index) => (
 							<li key={index}>{player}</li>
 						))}
-				</ul>
-
-				<h3>Player Answers</h3>
-				<ul>
-					{playerAnswers.length > 0 ? (
-						playerAnswers.map(({ playerName, answer }, index) => (
-							<li key={index}>
-								{playerName}: {answer}{" "}
-								{answer === correctAnswer ? "(Correct)" : "(Wrong)"}
-							</li>
-						))
-					) : (
-						<p>No answers yet...</p>
-					)}
 				</ul>
 
 				<h3>Scores</h3>

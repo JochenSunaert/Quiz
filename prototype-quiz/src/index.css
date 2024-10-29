@@ -96,7 +96,9 @@ body {
 body, html {
   margin: 0;
   height: 100%;
-}.selection {
+}
+
+.selection {
   display: flex;
   justify-content: center; /* Horizontally center */
   align-items: center;     /* Vertically center */
@@ -104,7 +106,7 @@ body, html {
   position: relative; /* For positioning the text and buttons */
 }
 
-.selection h2 {
+.selection > h2 {
   color: rgba(255, 255, 255, 0.4);
   font-size: 130px;
   position: absolute;
@@ -114,7 +116,7 @@ body, html {
   z-index: 1; /* Keep it above other elements */
 }
 
-body:hover .selection h2{
+body:hover .selection > h2{
   font-size: 100px;
 }
 .selection h2:hover{
@@ -133,7 +135,7 @@ body:hover .selection h2{
   height: 100%;
 }
 
-.selection button {
+.selection button.extrabold {
   width: 100%;
   height: 100%;
   border: none;
@@ -190,15 +192,6 @@ body:hover .selection h2{
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-input{
-  padding: 20px;
-  background-color: white;
-  border: solid 5px black;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  color: black;
 }
 
 .quizmaster{
@@ -263,6 +256,7 @@ input{
   display: flex; 
   justify-content: flex-end; 
   align-items: center; 
+  cursor: pointer;
 }
 
 .submitroom i {
@@ -319,7 +313,6 @@ input{
 .fixed-height-content {
   display: none;
   height: 0px; 
-  overflow-y: auto; 
   position: relative;
   z-index: 1; 
 }
@@ -331,4 +324,211 @@ input{
 
 .divCentreerder{
   display: none;
+}
+
+.topnav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: calc(100% + 250px); /* Match the animated line width */
+  position: relative;
+  left: 50%; /* Centering with translate */
+  transform: translateX(-50%);
+  z-index: 3; /* Ensure it appears above other elements */
+}
+
+.topnav p:nth-child(2) {
+  align-self: end;
+  justify-self: end;
+}
+
+main  h1{
+  font-size: 40px;
+  text-align: center;
+  margin-top: 3%;
+  margin-bottom: 0%;
+}
+
+main .sendQuestions .vraag{
+  display: grid;
+  justify-items: center;
+  align-self: center;
+}
+
+main .sendQuestions > div:nth-child(1) input{
+  background-color: #fd2e00;
+  border: white solid 3px;
+  color: white;
+
+  border-right: none;
+  border-top: none;
+
+  font-size: 20px;
+  padding-top: 0;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  width: 60%;
+}
+
+.playeroptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns for input and radio */
+  width: calc(100% + 250px); /* Match the animated line width */
+  position: relative;
+  left: 50%; /* Center the player options */
+  transform: translateX(-50%);
+  z-index: 3; /* Ensure it appears above other elements */
+}
+
+.playeroptions input[type="text"] {
+  background-color: #fd2e00; /* Input background color */
+  border: white solid 3px; /* Input border */
+  color: white; /* Input text color */
+  border-right: none; /* Remove right border to connect with radio */
+  border-top: none; /* Remove top border */
+  font-size: 20px; /* Input text size */
+  padding: 10px 30px; /* Input padding */
+  margin-top: 50px; /* Top margin */
+  width: 100%; /* Full width */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 0.8fr 0.2fr; /* Allocate space for input and radio */
+  align-items: center; /* Center items vertically */
+}
+
+/* Container for custom radio button */
+.radio-container {
+  display: flex; /* Use flex to align items */
+  justify-content: start;
+  align-items: end;
+  height: 100%; /* Full height to match the input */
+  position: relative; /* Position for absolute elements inside */
+}
+
+/* Custom square checkmark styled as button */
+.radio-container .checkmark {
+  height: 50%; /* Full height to match input */
+  width: 50%; /* Full width */
+  background-color: #fd2e00; /* Background color */
+  border: 3px solid white; /* Border color */
+  border-right: none;
+  border-top: none;
+  transition: background-color 0.3s ease; /* Transition for background color */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+  cursor: pointer; /* Pointer on hover */
+  display: flex; /* Use flex to center the checkmark */
+  justify-content: center; /* Center the checkmark */
+  align-items: center; /* Center the checkmark */
+}
+
+/* Hide the default radio button */
+.radio-container input[type="radio"] {
+  opacity: 0; /* Hide radio button */
+  width: 0; /* No width */
+  height: 0; /* No height */
+  position: absolute; /* Position off screen */
+  pointer-events: none; /* Prevent interaction with the hidden input */
+}
+
+
+
+
+
+/* Checked style for the custom radio button */
+.radio-container input[type="radio"]:checked + .checkmark {
+  background-color: white; /* Change background color when checked */
+  border-color: white; /* Change border color when checked */
+  border-left: solid white 3px;
+  border-bottom: solid white 3px;
+
+}
+
+/* Checkmark inside the custom button */
+.radio-container input[type="radio"]:checked + .checkmark::after {
+  content: ""; /* Content for the checkmark */
+  position: absolute; /* Position relative to the checkmark */
+  left: 20px;
+  top: 55px;
+  width: 10px;
+  height: 23px;
+  border: solid #fd2e00; /* Checkmark border */
+  border-width: 0 2px 2px 0; /* Border width for creating a checkmark */
+  transform: rotate(45deg); /* Rotate to create checkmark shape */
+}
+
+/* Checkmark inside the custom button */
+ .checkmark::after {
+  content: ""; /* Content for the checkmark */
+  position: absolute; /* Position relative to the checkmark */
+  left: 20px;
+  top: 55px;
+  width: 10px;
+  height: 23px;
+  border: solid white; /* Checkmark border */
+  border-width: 0 2px 2px 0; /* Border width for creating a checkmark */
+  transform: rotate(45deg); /* Rotate to create checkmark shape */
+}
+
+
+
+
+
+
+
+.sendQuestions .submitroom {
+
+  color: white;
+  font-size: 22px !important;
+
+  border: none;
+  background-color: transparent;
+  align-self: end;
+  justify-self: end;
+  width: 100% !important;
+  margin-top: 50px;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  cursor: pointer;
+
+}
+
+.playerAnswers h1{
+  font-size: 50px;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.playerfilled > div{
+  border: solid 3px white;
+  border-right: none;
+  border-top: none;
+  padding: 20px;
+}
+
+.gridplayerfilled{
+  display: grid;
+  grid-column-gap: 20px;
+  grid-template-columns: 1fr 1fr;
+  width: calc(100% + 250px); /* Match the animated line width */
+  position: relative;
+  left: 50%; /* Centering with translate */
+  transform: translateX(-50%);
+  z-index: 3; /* Ensure it appears above other elements */
+}
+
+.playerfilled h3{
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+
+
+.evaluating{
+  width: 100% !important;
+  justify-content: center;
 }
