@@ -526,9 +526,81 @@ main .sendQuestions > div:nth-child(1) input{
   margin-bottom: 10px;
 }
 
-
-
 .evaluating{
   width: 100% !important;
   justify-content: center;
+}
+.leftaside {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 200px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.leftaside h1 {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  white-space: nowrap;
+  font-size: 25px;
+}
+
+.rightaside {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 200px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 30px;
+}
+
+.rightaside h1 {
+  transform: rotate(90deg);
+  transform-origin: center;
+  white-space: nowrap;
+  font-size: 25px;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  grid-gap: 10px;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	right: 0; 
+	width: 25%; 
+	height: 100%;
+	background: #9d00ff;
+	color: white;
+	display: flex;
+	flex-direction: column; 
+	justify-content: center; 
+	align-items: center; 
+	z-index: 1000; 
+}
+
+.overlay h2 {
+	margin: 0;
+}
+
+.overlay button {
+	margin-top: 20px;
+	padding: 10px 20px;
+	border: none;
+	background: #fd2e00;
+	color: white;
+	cursor: pointer;
 }

@@ -17,6 +17,7 @@ const QuizMaster = () => {
 	const [error, setError] = useState(""); // State for error messages
 	const [isQuestionSubmitted, setIsQuestionSubmitted] = useState(false);
 	const [showPlayerAnswers, setShowPlayerAnswers] = useState(false);
+	const [overlayVisible, setOverlayVisible] = useState(false); // State for overlay visibility
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -122,9 +123,16 @@ const QuizMaster = () => {
 		setShowProfileSelection(true); // Show the profile selection again
 		// Reset any other necessary state if needed
 	};
-	
-	
-	
+
+	const handleShowOverlay = () => {
+		setOverlayVisible(true);
+	};
+
+	// New function to hide overlay
+	const handleCloseOverlay = () => {
+		setOverlayVisible(false);
+	};
+		
 	return (
 		<div class="backgroundcolor">
 			<div class="selection intro quizmasterintro">
@@ -146,6 +154,7 @@ const QuizMaster = () => {
 							</div>
 						{/*Animatie 2*/}
 							<div class="divCentreerder">
+								<div class="leftaside"><h1 class="extrabold">{room || "No Room Joined"}</h1></div>
     							<div class="image-container">
         							<img src="../assets/QuizmasterTop.png" class="topSplit" alt="Image 1" />
        								<div class="line line-bottom"></div> 
@@ -164,73 +173,95 @@ const QuizMaster = () => {
 														<input type="text" placeholder="your question" value={question} onChange={(e) => setQuestion(e.target.value)} required/>
 													</div>
 													<div>
+														{/*THE PLAYER OPTIONS*/}
 														<h1 class="extrabold">Player options</h1>
 														<div class="playeroptions">
-    {options.map((option, index) => (
-        <div class="options" key={index}>
-            <input 
-                type="text" 
-                value={option} 
-                placeholder="Place an option here" 
-                onChange={(e) => handleOptionChange(index, e.target.value)} 
-                required 
-            />
-            <div class="radio-container">
-                <input 
-                    type="radio" 
-                    id={`radio-${index}`} 
-                    name="correctAnswer" 
-                    value={option} 
-                    onChange={handleSelectCorrectAnswer} 
-                />
-                <label htmlFor={`radio-${index}`} class="checkmark"></label>
-            </div>
-        </div>
-    ))}
-</div>
-
-
-
-
-
+															{options.map((option, index) => (
+																<div class="options" key={index}>
+																	<input 
+																		type="text" 
+																		value={option} 
+																		placeholder="Place an option here" 
+																		onChange={(e) => handleOptionChange(index, e.target.value)} 
+																		required 
+																	/>
+																	<div class="radio-container">
+																		<input 
+																			type="radio" 
+																			id={`radio-${index}`} 
+																			name="correctAnswer" 
+																			value={option} 
+																			onChange={handleSelectCorrectAnswer} 
+																		/>
+																		<label htmlFor={`radio-${index}`} class="checkmark"></label>
+																	</div>
+																</div>
+															))}
+														</div>
 													</div>
 													{error && <p style={{ color: "red" }}>{error}</p>}{" "}
 													{/* Display error message */}
 													<button type="submit" class="submitroom extrabold" disabled={!correctAnswer || !canSubmitQuestion}> Submit Question <i class="fa-solid fa-chevron-right"></i></button>
-													
 												</form>
 											</main>
 											)}
-											
-{showPlayerAnswers && (
-    <div class="playerAnswers">
-        <h1 class="extrabold">Player Answers</h1>
-        <ul class="gridplayerfilled">
-            {playerAnswers.length > 0 ? (
-                playerAnswers.map(({ playerName, answer }, index) => (
-                    <li class="playerfilled" key={index}>
-						<div>
-							<h3 class="extrabold">{playerName}:</h3>
-							{answer}{" "}
-							{answer === correctAnswer ? "(Correct)" : "(Wrong)"}
-						</div>
+											{/* UI TONEN NA QUESTIONS TE SUBMITTEN - PLAYER ANSWERS */}
+											{showPlayerAnswers && (
+												<div class="playerAnswers">
+													<h1 class="extrabold">Player Answers</h1>
+													<ul class="gridplayerfilled">
+														{playerAnswers.length > 0 ? (
+															playerAnswers.map(({ playerName, answer }, index) => (
+																<li class="playerfilled" key={index}>
+																	<div>
+																		<h3 class="extrabold">{playerName}:</h3>
+																		{answer}{" "}
+																		{answer === correctAnswer ? "(Correct)" : "(Wrong)"}
+																	</div>
 
-                    </li>
-                ))
-            ) : (
-                <p>No answers yet...</p>
-            )}
-        </ul>
-        <button onClick={handleEvaluateAnswers} class="submitroom extrabold evaluating" disabled={canSubmitQuestion}>
-			evaluate answers <i class="fa-solid fa-chevron-right"></i>
-        </button>
-    </div>
-)}
+																</li>
+															))
+														) : (
+															<p>No answers yet...</p>
+														)}
+													</ul>
+													<button onClick={handleEvaluateAnswers} class="submitroom extrabold evaluating" disabled={canSubmitQuestion}>
+														evaluate answers <i class="fa-solid fa-chevron-right"></i>
+													</button>
+												</div>
+											)}
 										</div>
         							</div>
         							<div class="line line-top"></div> 
         							<img src="../assets/QuizmasterBottom.png" class="bottomSplit" alt="Image 2" />
     							</div>
+								<div className="rightaside" onClick={handleShowOverlay}>
+	<h1 className="extrabold">Players<i className="fa-solid fa-chevron-down"></i></h1>
+</div>
+{overlayVisible && (
+	<div className="overlay">
+						<h3>Connected Players:</h3>
+				<ul>
+					{connectedPlayers
+						.filter((player) => player !== "Quizmaster")
+						.map((player, index) => (
+							<li key={index}>{player}</li>
+						))}
+				</ul>
+
+				<h3>Scores</h3>
+				<ul>
+					{Object.keys(scores)
+						.filter((playerName) => playerName !== "Quizmaster") // Exclude quizmaster from score display
+						.map((playerName) => (
+							<li key={playerName}>
+								{playerName}: {scores[playerName]}
+							</li>
+						))}
+				</ul>
+		<button onClick={handleCloseOverlay}>Close</button>
+	</div>
+)}
 							</div>
 						</div>
 					{/*Alles dat moet gebeuren na paarse knop te klikken*/}
@@ -251,42 +282,8 @@ const QuizMaster = () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 			<div class="quizmaster">
-				<h2>Quizmaster - Submit a Question</h2>
-				
 
-				
-				<h3>Connected Players:</h3>
-				<ul>
-					{connectedPlayers
-						.filter((player) => player !== "Quizmaster")
-						.map((player, index) => (
-							<li key={index}>{player}</li>
-						))}
-				</ul>
-
-				<h3>Scores</h3>
-				<ul>
-					{Object.keys(scores)
-						.filter((playerName) => playerName !== "Quizmaster") // Exclude quizmaster from score display
-						.map((playerName) => (
-							<li key={playerName}>
-								{playerName}: {scores[playerName]}
-							</li>
-						))}
-				</ul>
 			</div>
 		</div>
 	);
