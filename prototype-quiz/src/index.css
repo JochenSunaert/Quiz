@@ -64,6 +64,7 @@ table {
 /* Gebruik de font-family in je CSS */
 body {
     font-family: 'Poppins', sans-serif;
+    overflow: hidden !important;
 }
 
 
@@ -590,6 +591,7 @@ main .sendQuestions > div:nth-child(1) input{
 	justify-content: center; 
 	align-items: center; 
 	z-index: 1000; 
+  filter: drop-shadow(-10px 0px 30px #000000);
 }
 
 .overlay h2 {
@@ -603,4 +605,27 @@ main .sendQuestions > div:nth-child(1) input{
 	background: #fd2e00;
 	color: white;
 	cursor: pointer;
+}
+
+.overlayh3 h3{
+  display: inline-block;
+  grid-template-columns: 1fr 1fr;
+  margin: 10px;
+}
+
+.overlay ul{
+width: 62%;
+margin-top: 2%;
+}
+
+.overlayli{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: white solid 2px;
+  padding: 2%;
+  margin-bottom: 3%;
+}
+.overlayli p:nth-child(2){
+  align-self: end;
+  justify-self: end;
 }

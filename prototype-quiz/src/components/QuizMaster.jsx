@@ -218,7 +218,6 @@ const QuizMaster = () => {
 																		{answer}{" "}
 																		{answer === correctAnswer ? "(Correct)" : "(Wrong)"}
 																	</div>
-
 																</li>
 															))
 														) : (
@@ -235,33 +234,48 @@ const QuizMaster = () => {
         							<div class="line line-top"></div> 
         							<img src="../assets/QuizmasterBottom.png" class="bottomSplit" alt="Image 2" />
     							</div>
+								{/*Overlay voor rechterknop, connected spelers en scores.*/}
 								<div className="rightaside" onClick={handleShowOverlay}>
-	<h1 className="extrabold">Players<i className="fa-solid fa-chevron-down"></i></h1>
-</div>
-{overlayVisible && (
-	<div className="overlay">
-						<h3>Connected Players:</h3>
-				<ul>
-					{connectedPlayers
-						.filter((player) => player !== "Quizmaster")
-						.map((player, index) => (
-							<li key={index}>{player}</li>
-						))}
-				</ul>
+									<h1 className="extrabold">Players<i className="fa-solid fa-chevron-down"></i></h1>
+								</div>
+									{overlayVisible && (
+										<div className="overlay">
+											{/* <h3>Connected Players:</h3>
+													<ul>
+														{connectedPlayers
+															.filter((player) => player !== "Quizmaster")
+															.map((player, index) => (
+																<li key={index}>{player}</li>
+															))}
+													</ul>
 
-				<h3>Scores</h3>
-				<ul>
-					{Object.keys(scores)
-						.filter((playerName) => playerName !== "Quizmaster") // Exclude quizmaster from score display
-						.map((playerName) => (
-							<li key={playerName}>
-								{playerName}: {scores[playerName]}
-							</li>
-						))}
-				</ul>
-		<button onClick={handleCloseOverlay}>Close</button>
-	</div>
-)}
+													<h3>Scores:</h3>
+													<ul>
+														{Object.keys(scores)
+															.filter((playerName) => playerName !== "Quizmaster")
+															.map((playerName) => (
+																<li key={playerName}>
+																	{playerName}: {scores[playerName]}
+																</li>
+															))}
+													</ul> */}
+													<div class="overlayh3">
+														<h3 class="extrabold"> Connected Players</h3>
+														<h3 class="extrabold">Scores</h3>
+													</div>	
+<ul>
+    {connectedPlayers
+        .filter((player) => player !== "Quizmaster") // Exclude Quizmaster
+        .map((player, index) => (
+            <li class="overlayli" key={index}>
+                <p>{player}</p> <p>{scores[player] || 0}</p> {/* Show player's score or default to 0 */}
+            </li>
+        ))}
+</ul>
+
+											<button onClick={handleCloseOverlay}>Close</button>
+										</div>
+									)}
 							</div>
 						</div>
 					{/*Alles dat moet gebeuren na paarse knop te klikken*/}
@@ -270,20 +284,6 @@ const QuizMaster = () => {
 						<p class="thin top-left">Sunaert</p>
 					</div>
 				</div>
-			</div>
-
-
-
-
-
-
-
-
-
-
-
-			<div class="quizmaster">
-
 			</div>
 		</div>
 	);
